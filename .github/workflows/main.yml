@@ -17,7 +17,7 @@ jobs:
           USERNAME: ubuntu
           KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i "$KEY" $USERNAME@$HOST '
+          ssh -i ($KEY) $USERNAME@$HOST '
             cd /django-ec2-fun
             git pull origin main
             source venv/bin/activate
