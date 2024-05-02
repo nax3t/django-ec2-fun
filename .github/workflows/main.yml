@@ -17,13 +17,16 @@ jobs:
           USERNAME: ubuntu
           KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          ssh -i $KEY $USERNAME@$HOST '
-            cd /django-ec2-fun
-            git pull origin main
-            source venv/bin/activate
-            pip install -r requirements.txt
-            python manage.py migrate
-            python manage.py collectstatic --noinput
-            sudo systemctl restart gunicorn
-            sudo systemctl restart nginx
-          '
+            mkdir -p ~/.ssh
+            echo "$EC2_SSH_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh -i ~/.ssh/id_rsa $USERNAME@$HOST '
+              cd /django-ec2-fun
+              git pull origin main
+              source venv/bin/activate
+              pip install -r requirements.txt
+              python manage.py migrate
+              python manage.py collectstatic --noinput
+              sudo systemctl restart gunicorn
+              sudo systemctl restart nginx
+            '
