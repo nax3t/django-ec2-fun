@@ -13,7 +13,7 @@ jobs:
 
       - name: Deploy to EC2
         env:
-          HOST: 3.137.222.47
+          HOST: ec2-3-137-222-47.us-east-2.compute.amazonaws.com
           USERNAME: ubuntu
           KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
