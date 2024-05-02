@@ -1,0 +1,29 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        env:
+          HOST: 3.137.222.47
+          USERNAME: ubuntu
+          KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i $KEY $USERNAME@$HOST '
+            cd /django-ec2-fun
+            git pull origin main
+            source venv/bin/activate
+            pip install -r requirements.txt
+            python manage.py migrate
+            python manage.py collectstatic --noinput
+            sudo systemctl restart gunicorn
+            sudo systemctl restart nginx
+          '
